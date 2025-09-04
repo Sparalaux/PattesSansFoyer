@@ -1,0 +1,59 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Accueil{% endblock %}
+
+{% block body %}
+<main>
+<h1>Accueil</h1>
+
+{# --- 2. À PROPOS --- #}
+    <section class="about">
+        <h2>À propos</h2>
+        <p>
+            Notre mission est de mettre en relation les refuges et les familles prêtes à accueillir un animal.
+            Grâce à notre plateforme, vous pouvez consulter les profils, réserver un animal et finaliser l’adoption facilement.
+        </p>
+    </section>
+
+    {# --- 3. ANIMAUX EN VEDETTE --- #}
+    <section class="featured-animals">
+        <h2>Nos protégés en vedette</h2>
+        <div class="animal-grid">
+            {% for animal in animaux %}
+                <div class="animal-card">
+                    <img src="{{ asset(animal.image) }}" alt="{{ animal.nom }}">
+                    <h3>{{ animal.nom }}</h3>
+                    <a href="{{ path('animaux_details', { id: animal.id }) }}" class="btn btn-details">Voir la fiche</a>
+                </div>
+            {% else %}
+                <p>Aucun animal pour le moment.</p>
+            {% endfor %}
+        </div>
+    </section>
+
+    {# --- 4. COMMENT ÇA MARCHE --- #}
+    <section class="how-it-works">
+        <h2>Comment ça marche ?</h2>
+        <div class="steps">
+            <div class="step">
+                <span>1</span>
+                <p>Parcourez les profils</p>
+            </div>
+            <div class="step">
+                <span>=></span>
+            </div>
+            <div class="step">
+                <span>2</span>
+                <p>Réservez un animal</p>
+            </div>
+            <div class="step">
+                <span>=></span>
+            </div>
+            <div class="step">
+                <span>3</span>
+                <p>Finalisez l’adoption avec le refuge</p>
+            </div>
+        </div>
+    </section>
+</main>
+{% endblock %}

@@ -1,0 +1,58 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Hello ProfilController!{% endblock %}
+
+{% block body %}
+<main class="profil-container">
+    <div class="profil-box">
+    {% if 'ROLE_AGENCE' in roles %}
+    <h1>Bienvenue, {{ user.nom }}</h1>
+    <p>Voici les statistiques de vos annonces... </p>
+    <a href="{{ path('agence_ajout_animal') }}" class="btn btn-success">
+        Ajouter un animal
+    </a>
+</div>
+    {# Affichage spécifique agence #}
+
+{% elseif 'ROLE_USER' in roles %}
+<div class="profil-box">
+        <h1>Information profil</h1>
+
+        <div class="profil-info">
+            <p><strong>prenom utilisateur:</strong> {{ app.user.prenom }}</p>
+            <p><strong>nom utilisateur:</strong> {{ app.user.nom }}</p>
+            <p><strong>email utilisateur:</strong> {{ app.user.email }}</p>
+            <p><strong>telephone utilisateur:</strong> {{ app.user.telephone }}</p>
+        </div>
+
+        <div class="profil-btn">
+            <a href="">
+                <button>modifier les informations</button>
+            </a>
+        </div>
+
+    <h2>Mes Réservations</h2>
+    {% if reservations is not empty %}
+        <ul>
+            {% for reservation in reservations %}
+            <li>
+                {{ reservation.animal.nom }} - Réservé le {{ reservation.dateReservation|date('d/m/Y H:i') }}
+                <a href="{{ path('animaux_details', {'id': reservation.animal.id}) }}">Voir l'animal</a>
+
+                <form action="{{ path('reservation_supprimer', {'id': reservation.id}) }}" method="post" style="display:inline">
+                    <input type="hidden" name="_token" value="{{ csrf_token('supprimer_reservation_' ~ reservation.id) }}">
+                    <button type="submit" onclick="return confirm('Supprimer cette réservation ?')">❌ Supprimer</button>
+                </form>
+            </li>
+            {% endfor %}
+        </ul>
+    {% else %}
+        <p>Vous n'avez pas encore de réservations.</p>
+    {% endif %}
+
+{% else %}
+    <h1>Bienvenue</h1>
+    <p>Vous n'etes pas enregistrer en tant qu'utilisateur</p>
+{% endif %}
+</main>
+{% endblock %}

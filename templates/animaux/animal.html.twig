@@ -1,0 +1,25 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Hello AnimauxController!{% endblock %}
+
+{% block body %}
+<main class="animal-detail-container">
+    <div class="animal-card">
+        <h1 class="animal-title">{{ animal.nom }}</h1>
+        <img class="animal-image" src="{{ animal.image }}" alt="{{ animal.nom }}">
+
+        <div class="animal-info">
+            <p class="info-texte">espece: {{animal.espece}}</p>
+            <p class="info-texte">race: {{animal.race}}</p>
+            <p class="info-texte">age: {{animal.age}}</p>
+            <p class="info-texte">description: {{animal.description}}</p>
+            <p class="info-texte">Temps passé au refuge : {{ animal.tempsRefuge.diff(date()).days }} jours</p>
+
+        </div>
+
+        <div class="animal-reserver">
+            <a href="{{ path('animal_reserver', { id: animal.id }) }}" class="reserver-button">Réserver</a>
+        </div>
+    </div>
+</main>
+{% endblock %}

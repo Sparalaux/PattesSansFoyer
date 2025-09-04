@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="UTF-8">
+        <title>{% block title %}Welcome!{% endblock %}</title>
+        <link rel="icon" type="image/png" href="{{ asset('assets/images/PSF_favicon.png') }}">
+        {% block stylesheets %}
+        {% endblock %}
+
+        {% block javascripts %}
+            {% block importmap %}{{ importmap('app') }}{% endblock %}
+        {% endblock %}
+    </head>
+    {% if app.request.cookies.get('cookie_consent') is null %}
+    <div id="cookie-banner" class="cookie-banner">
+        <p>Ce site utilise des cookies pour améliorer votre expérience.
+            <a href="{{ path('cookies_policy') }}">En savoir plus</a>
+        </p>
+        <button id="accept-cookies" class="btn btn-success">Accepter</button>
+        <button id="refuse-cookies" class="btn btn-danger">Refuser</button>
+    </div>
+    {% endif %}
+    <script>
+        document.addEventListener("DOMContentLoaded", () => {
+            const banner = document.getElementById("cookie-banner");
+            const acceptBtn = document.getElementById("accept-cookies");
+            const refuseBtn = document.getElementById("refuse-cookies");
+
+            if (acceptBtn) {
+                acceptBtn.addEventListener("click", () => {
+                    document.cookie = "cookie_consent=accepted; path=/; max-age=" + 60*60*24*365;
+                    banner.style.display = "none";
+                });
+            }
+
+            if (refuseBtn) {
+                refuseBtn.addEventListener("click", () => {
+                    document.cookie = "cookie_consent=refused; path=/; max-age=" + 60*60*24*365;
+                    banner.style.display = "none";
+                });
+            }
+        });
+        </script>
+    <body>
+        <nav class="navbar">
+            <div class="navbar-container">
+                <a class="navbar-brand" href="{{ path('home')}}"><img src="{{ asset('assets/images/PSF_logo.png') }}" alt="Logo PSF" height="40"></a>
+                <div>
+                    <ul>
+                        <li>
+                            <a class="navbar-brand {% if app.request.attributes.get('_route') == 'home' %}active{% endif %}" href="{{ path('home')}}">Accueil</a>
+                        </li>
+                        <li>
+                            {% set route = app.request.attributes.get('_route') %}
+                            <a class="navbar-brand {% if route starts with 'animaux' %}active{% endif %}" href="{{ path('animaux')}}">Animaux</a>
+                        </li>
+                        <li>
+                            <a class="navbar-brand {% if app.request.attributes.get('_route') == 'contact' %}active{% endif %}" href="{{ path('contact')}}">Contact</a>
+                        </li>
+                        {% if app.user %}
+                        <li><a class="navbar-brand {% if app.request.attributes.get('_route') == 'profil' %}active{% endif %}" href="{{ path('profil')}}">Profil</a></li>
+                        <li><a class="navbar-brand" href="{{ path('app_logout') }}">Déconnexion</a></li>
+                        {% else %}
+                        <li><a class="navbar-brand {% if app.request.attributes.get('_route') == 'inscription' %}active{% endif %}" href="{{ path('inscription') }}">Inscription</a></li>
+                        <li><a class="navbar-brand {% if app.request.attributes.get('_route') == 'connexion' %}active{% endif %}" href="{{ path('app_login') }}">Connexion</a></li>
+    {% endif %}
+                    </ul>
+                </div>
+            </div>
+        </nav>
+        {% block body %}{% endblock %}
+        <footer>
+            <nav class="navbar">
+                <div class="navbar-container">
+                    <a class="navbar-brand" href="{{ path('home')}}"><img src="{{ asset('assets/images/PSF_logo.png') }}" alt="Logo PSF" height="40"></a>
+
+            <div>
+                <ul>
+                    <li>
+                        <a class="navbar-brand {% if app.request.attributes.get('_route') == 'condition_utilisation' %}active{% endif %}" href="{{ path('condition_utilisation')}}">conditions utilisation</a>
+                    </li>
+                    <li>
+                        <a class="navbar-brand {% if app.request.attributes.get('_route') == 'mention_legal' %}active{% endif %}" href="{{ path('mention_legal')}}">mentions legales</a>
+                    </li>
+                    <li>
+                        <a class="navbar-brand {% if app.request.attributes.get('_route') == 'politique_confi' %}active{% endif %}" href="{{ path('politique_confi')}}">politique de confidentialité</a>
+                    </li>
+                    <li>
+                        <a class="navbar-brand {% if app.request.attributes.get('_route') == 'cookies_policy' %}active{% endif %}" href="{{ path('cookies_policy')}}">politique des cookies</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+        </footer>
+    </body>
+</html>

@@ -1,0 +1,57 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}conditions d'utilisation{% endblock %}
+
+{% block body %}
+<main class="conditions-utilisation">
+    <h1> Conditions d'utilisation</h1>
+
+    <p>Bienvenue sur notre site. En accédant et en utilisant ce site, vous acceptez de respecter les presentes conditions d'utilisations.</p>
+
+    <h2>1. Objet</h2>
+    <p>
+        Les présentes conditions ont pour objet de définir les modalités d’accès et d’utilisation du site
+        <strong>Pattes Sans Foyer</strong>.
+    </p>
+
+    <h2>2. Accès au site</h2>
+    <p>
+        L’accès au site est gratuit pour tout utilisateur disposant d’un accès à Internet.
+        Tous les coûts liés à cet accès (matériel, logiciel, connexion Internet, etc.) sont à la charge de l’utilisateur.
+    </p>
+
+    <h2>3. Données personnelles</h2>
+    <p>
+        Vos données personnelles collectées via le site sont utilisées uniquement dans le cadre de votre utilisation.
+        (ex. : gestion des réservation d'animaux)
+        Pour plus d'information, veuillez consulter notre <a href="{{path('politique_confi')}}">politique de confidentialité</a>
+    </p>
+
+    <h2>4. Réservations</h2>
+    <p>
+        Toute réservation effectuée sur le site est soumise à validation par l’association.
+        Nous nous réservons le droit d’annuler ou de refuser une demande si les conditions d’adoption ne sont pas respectées.
+    </p>
+
+    <h2>5. Responsabilité</h2>
+    <p>
+        Nous nous efforçons de fournir des informations exactes mais ne garantissons pas l’exactitude, la complétude
+        ou l’actualité des contenus publiés sur le site.
+    </p>
+
+    <h2>6. Modification des conditions</h2>
+    <p>
+        Nous nous réservons le droit de modifier ces conditions à tout moment.
+        L’utilisateur est invité à les consulter régulièrement.
+    </p>
+
+    <h2>7. Contact</h2>
+    <p>
+        Pour toute question relative aux présentes conditions, vous pouvez nous contacter via la page
+        <a href="{{ path('contact') }}">contact</a>.
+    </p>
+
+    <p class="date">Dernière mise à jour : {{ "now"|date("d/m/Y") }}</p>
+
+</main>
+{% endblock %}

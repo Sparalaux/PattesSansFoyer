@@ -1,0 +1,34 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Hello AnimauxController!{% endblock %}
+
+{% block body %}
+<main>
+    <h1>Liste des animaux</h1>
+
+    <form method="get" action="{{ path('animaux') }}" class="search-form">
+       <div class="container">
+    <aside class="filters">
+        <form method="get" action="{{ path('animaux') }}">
+            <select name="espece"><option value="">espèce</option></select>
+            <select name="race"><option value="">race</option></select>
+            <select name="age"><option value="">age</option></select>
+            <select name="urgence"><option value="">urgence</option></select>
+            <button type="submit">Rechercher</button>
+        </form>
+    </aside>
+
+    <section class="animal-grid">
+        {% for animal in animaux %}
+            <div class="animal-card">
+                <p class="animal-name">{{ animal.nom }}</p>
+                <a href="{{path('animaux_details', { id: animal.id }) }}"><img src="{{ animal.image }}" alt="Photo de {{ animal.nom }}"></a>
+            </div>
+        {% else %}
+            <p>Aucun animal trouvé. </p>
+        {% endfor %}
+    </section>
+</div>
+</form>
+</main>
+{% endblock %}

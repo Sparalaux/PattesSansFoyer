@@ -1,0 +1,66 @@
+version: "3.9"
+
+services:
+  # Service MySQL
+  database:
+    image: mysql:8.0
+    container_name: symfony_mysql
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_DATABASE: ${MYSQL_DATABASE:-app}
+      MYSQL_USER: ${MYSQL_USER:-app}
+      MYSQL_PASSWORD: ${MYSQL_PASSWORD:-password}
+    ports:
+      - "3306:3306"
+    volumes:
+      - database_data:/var/lib/mysql:rw
+    networks:
+      - symfony
+
+  # Service pour Symfony (PHP + serveur web)
+  php:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: symfony_php
+    volumes:
+      - .:/var/www/html:cached
+    ports:
+      - "8000:8000"
+    depends_on:
+      - database
+    networks:
+      - symfony
+    environment:
+      DATABASE_URL: mysql://${MYSQL_USER:-app}:${MYSQL_PASSWORD:-password}@database:3306/${MYSQL_DATABASE:-app}?serverVersion=8.0
+      MAILER_DSN: smtp://mailer:1025
+
+  # Service Mailpit (boîte mail locale)
+  mailer:
+    image: axllent/mailpit
+    container_name: symfony_mailpit
+    ports:
+      - "1025:1025"
+      - "8025:8025"
+    environment:
+      MP_SMTP_AUTH_ACCEPT_ANY: 1
+      MP_SMTP_AUTH_ALLOW_INSECURE: 1
+    networks:
+      - symfony
+  jenkins:
+      image: jenkins/jenkins:lts
+      privileged: true
+      user: root
+      ports:
+       - 8080:8080
+       - 50000:50000
+      container_name: jenkins
+      volumes:
+        - /Users/theo/jenkins_compose/jenkins_configuration:/var/jenkins_home
+        - /var/run/docker.sock:/var/run/docker.sock
+volumes:
+  database_data:
+
+networks:
+  symfony:
+    driver: bridge

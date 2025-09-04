@@ -1,0 +1,94 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Politique de confidentialité{% endblock %}
+
+{% block body %}
+<main>
+    <h1>Politique de confidentialité</h1>
+    <p>Dernière mise à jour : {{ "now"|date("d/m/Y") }}</p>
+
+    <p>
+        La présente Politique explique quelles données nous collectons, pour quelles finalités,
+        comment nous les protégeons et les droits dont vous disposez.
+    </p>
+
+    <hr>
+
+    <h2>1. Responsable du traitement</h2>
+    <p>
+        <strong>Pattes Sans Foyer</strong><br>
+        Email : contact@exemple.org<br>
+        Adresse : 00, Rue Exemple, 75000 Paris
+    </p>
+
+    <h2>2. Données que nous collectons</h2>
+    <ul>
+        <li>Informations de compte : nom, prénom, email, téléphone (facultatif).</li>
+        <li>Données de navigation et cookies (voir section 7).</li>
+        <li>Données liées aux réservations d’animaux.</li>
+        <li>Messages envoyés via le formulaire de contact.</li>
+    </ul>
+
+    <h2>3. Finalités et bases légales</h2>
+    <ul>
+        <li>Création et gestion de compte (exécution du contrat).</li>
+        <li>Gestion des réservations et prises de contact (exécution du contrat/intérêt légitime).</li>
+        <li>Sécurisation du site et prévention de la fraude (intérêt légitime).</li>
+        <li>Envoi d’informations avec votre consentement (si applicable).</li>
+    </ul>
+
+    <h2>4. Destinataires de vos données</h2>
+    <p>
+        Vos données peuvent être partagées avec nos prestataires techniques (hébergement, email) strictement
+        nécessaires au fonctionnement du service, soumis à des obligations de confidentialité.
+    </p>
+
+    <h2>5. Durées de conservation</h2>
+    <ul>
+        <li>Compte utilisateur : tant que votre compte est actif, puis 3 ans après la dernière activité.</li>
+        <li>Réservations : durée nécessaire au suivi, puis archivage légal si applicable.</li>
+        <li>Messages de contact : 12 mois maximum.</li>
+        <li>Cookies : selon leur finalité (voir section 7).</li>
+    </ul>
+
+    <h2>6. Vos droits</h2>
+    <p>
+        Vous disposez des droits d’accès, de rectification, d’effacement, d’opposition, de limitation,
+        de portabilité et du droit de définir le sort de vos données après votre décès.
+        Pour exercer vos droits, contactez-nous à : <a href="mailto:contact@exemple.org">contact@exemple.org</a>.
+        Vous pouvez également introduire une réclamation auprès de la CNIL.
+    </p>
+
+    <h2>7. Cookies et traceurs</h2>
+    <p>
+        Nous utilisons des cookies nécessaires au fonctionnement du site et, le cas échéant, des cookies
+        de mesure d’audience. Vous pouvez gérer vos préférences via le bandeau cookies ou les paramètres
+        de votre navigateur.
+    </p>
+
+    <h2>8. Sécurité</h2>
+    <p>
+        Nous mettons en œuvre des mesures techniques et organisationnelles adaptées afin de protéger vos
+        données contre la perte, l’accès non autorisé et la divulgation.
+    </p>
+
+    <h2>9. Transferts hors UE</h2>
+    <p>
+        Si certains prestataires traitent des données hors de l’UE, nous nous assurons qu’ils offrent
+        des garanties adéquates (clauses contractuelles types, pays adéquats, etc.).
+    </p>
+
+    <h2>10. Modifications</h2>
+    <p>
+        Nous pouvons modifier la présente Politique pour refléter les évolutions légales ou fonctionnelles.
+        La version à jour est toujours publiée sur cette page.
+    </p>
+
+    <p class="mt-6">
+        Pour toute question, consultez notre <a href="{{ path('condition_utilisation') }}">page Conditions d’utilisation</a>
+        ou <a href="{{ path('contact') }}">contactez-nous</a>.
+    </p>
+</main>
+
+
+{% endblock %}
