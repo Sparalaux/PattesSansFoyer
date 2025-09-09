@@ -53,54 +53,68 @@ final class ProfilController extends AbstractController
 
 
 #[Route('/profil/modifier', name: 'profil_modifier')]
-    #[IsGranted('ROLE_USER')]
-    public function modifierProfil(
-        Request $request,
-        Security $security,
-        EntityManagerInterface $em,
-        UserPasswordHasherInterface $passwordHasher,
-        LoggerInterface $logger
-    ): Response {
-        try {
-            $user = $security->getUser();
-            $form = $this->createForm(ModifierType::class, $user);
-            $form->handleRequest($request);
+#[IsGranted('ROLE_USER')]
+public function modifierProfil(
+    Request $request,
+    Security $security,
+    EntityManagerInterface $em,
+    UserPasswordHasherInterface $passwordHasher,
+    LoggerInterface $logger
+): Response {
+    try {
+        $user = $security->getUser();
+        $form = $this->createForm(ModifierType::class, $user);
+        $form->handleRequest($request);
 
-            if ($form->isSubmitted() && $form->isValid()) {
-                // Si l'utilisateur modifie son mot de passe
-                $plainPassword = $form->get('password')->getData();
-                if ($plainPassword) {
-                    $hashedPassword = $passwordHasher->hashPassword($user, $plainPassword);
-                    $user->setPassword($hashedPassword);
+        // Vérifie si le formulaire a été soumis ET qu'il est valide
+        if ($form->isSubmitted() && $form->isValid()) {
+            $plainPassword = $form->get('password')->get('first')->getData();
+
+            // Si l'utilisateur souhaite modifier son mot de passe
+            if (!empty($plainPassword)) {
+                if (
+                    strlen($plainPassword) < 12 ||
+                    !preg_match('/^(?=.*[A-Z])(?=.*\d)(?=.*[^A-Za-z0-9])/', $plainPassword)
+                ) {
+                    $this->addFlash('error', 'Le mot de passe doit contenir au moins 12 caractères, une majuscule, un chiffre et un caractère spécial.');
+
+                    return $this->render('profil/modifier.html.twig', [
+                        'form' => $form->createView(),
+                    ]);
                 }
 
-                $em->flush();
-
-                $this->addFlash('success', 'Profil mis à jour avec succès !');
-                return $this->redirectToRoute('profil');
+                // Mot de passe valide → on met à jour
+                $hashedPassword = $passwordHasher->hashPassword($user, $plainPassword);
+                $user->setPassword($hashedPassword);
             }
 
-            return $this->render('profil/modifier.html.twig', [
-                'form' => $form->createView(),
-            ]);
-        } catch (\Doctrine\DBAL\Exception $e) {
-            $logger->error('Erreur BDD dans ProfilController::modifierProfil() : ' . $e->getMessage());
+            // Met à jour les autres informations du profil
+            $em->flush();
 
-            $this->addFlash('error', 'Impossible de modifier le profil pour le moment.');
-
-            return $this->render('errors/database_error.html.twig', [
-                'message' => 'Erreur lors de la modification du profil',
-            ]);
-        } catch (\Exception $e) {
-            $logger->critical('Erreur inattendue dans ProfilController::modifierProfil() : ' . $e->getMessage());
-
-            $this->addFlash('error', 'Une erreur est survenue.');
-
-            return $this->render('errors/general_error.html.twig', [
-                'message' => 'Une erreur est survenue lors de la modification du profil.',
-            ]);
+            $this->addFlash('success', 'Profil mis à jour avec succès !');
+            return $this->redirectToRoute('profil');
         }
+
+        // Si le formulaire n’est pas soumis ou pas valide, on affiche la page
+        return $this->render('profil/modifier.html.twig', [
+            'form' => $form->createView(),
+        ]);
+    } catch (\Doctrine\DBAL\Exception $e) {
+        $logger->error('Erreur BDD dans ProfilController::modifierProfil() : ' . $e->getMessage());
+
+        $this->addFlash('error', 'Impossible de modifier le profil pour le moment.');
+        return $this->render('errors/database_error.html.twig', [
+            'message' => 'Erreur lors de la modification du profil',
+        ]);
+    } catch (\Exception $e) {
+        $logger->critical('Erreur inattendue dans ProfilController::modifierProfil() : ' . $e->getMessage());
+
+        $this->addFlash('error', 'Une erreur est survenue.');
+        return $this->render('errors/general_error.html.twig', [
+            'message' => 'Une erreur est survenue lors de la modification du profil.',
+        ]);
     }
+}
 
 #[Route('/profil/supprimer', name: 'profil_supprimer', methods: ['POST'])]
 public function supprimerProfil(

@@ -29,16 +29,7 @@ class ModifierType extends AbstractType
                 'required' => false,
                 'first_options'  => ['label' => 'Mot de passe'],
                 'second_options' => ['label' => 'Confirmation du mot de passe'],
-                'constraints' => [
-                    new Length([
-                        'min' => 12,
-                        'minMessage' => 'Le mot de passe doit contenir au moins {{ limit }} caractères',
-                    ]),
-                    new Regex([
-                        'pattern' => '/^(?=.*[A-Z])(?=.*\d)(?=.*[^A-Za-z0-9])/',
-                        'message' => 'Le mot de passe doit contenir au moins une majuscule, un chiffre et un caractère spécial.',
-                    ]),
-                ],
+                'mapped' => false,
             ]);
     }
 

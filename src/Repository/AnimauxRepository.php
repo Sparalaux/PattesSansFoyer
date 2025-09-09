@@ -56,8 +56,8 @@ public function findByFilters(array $filters): array
             $qb->andWhere('a.age = :age')->setParameter('age', $filters['age']);
         }
 
-        if (isset($filters['urgence']) && $filters['urgence'] !== '') {
-            $qb->andWhere('a.urgence = :urgence')->setParameter('urgence', $filters['urgence']);
+        if (isset($filters['urgent']) && $filters['urgent'] !== '') {
+            $qb->andWhere('a.urgent = :urgent')->setParameter('urgent', $filters['urgent']);
         }
 
         return $qb->getQuery()->getResult();
