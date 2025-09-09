@@ -26,9 +26,13 @@
         </div>
 
         <div class="profil-btn">
-            <a href="">
+            <a href="{{ path('profil_modifier')}}">
                 <button>modifier les informations</button>
             </a>
+            <form method="POST" action="{{ path('profil_supprimer') }}" onsubmit="return confirm('Voulez-vous vraiment supprimer votre compte ?');">
+                <input type="hidden" name="_token" value="{{ csrf_token('supprimer_profil_' ~ app.user.id) }}">
+                <button type="submit" class="btn btn-danger mt-3">Supprimer mon compte</button>
+            </form>
         </div>
 
     <h2>Mes Réservations</h2>

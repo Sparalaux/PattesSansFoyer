@@ -3,6 +3,8 @@
 namespace App\Entity;
 
 use App\Repository\UserRepository;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Security\Core\User\UserInterface;
 use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
@@ -139,4 +141,46 @@ public function setUserRole(string $userRole): static
 
     return $this;
 }
+
+
+#[ORM\OneToMany(mappedBy: 'user', targetEntity: Reservation::class, orphanRemoval: true)]
+private Collection $reservations;
+
+public function __construct()
+{
+    $this->reservations = new ArrayCollection();
+}
+
+/**
+ * @return Collection<int, Reservation>
+ */
+public function getReservations(): Collection
+{
+    return $this->reservations;
+}
+
+public function addReservation(Reservation $reservation): self
+{
+    if (!$this->reservations->contains($reservation)) {
+        $this->reservations->add($reservation);
+        $reservation->setUser($this);
+    }
+
+    return $this;
+}
+
+public function removeReservation(Reservation $reservation): self
+{
+    if ($this->reservations->removeElement($reservation)) {
+        // Si la réservation appartient à l'utilisateur, on supprime la liaison
+        if ($reservation->getUser() === $this) {
+            $reservation->setUser(null);
+        }
+    }
+
+    return $this;
+}
+
+
+
 }
