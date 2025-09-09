@@ -9,21 +9,24 @@
     <form method="get" action="{{ path('animaux') }}" class="search-form">
        <div class="container">
     <aside class="filters">
-        <form method="get" action="{{ path('animaux') }}">
-            <select name="espece">
-                <option value="">espèce</option>
-                <option value="chien">chien</option>
-                <option value="chat">chat</option>
-                <option value="lapin">espèce</option>
+            <select name="espece" id="espece">
+                <option value="" {% if app.request.get('espece') is same as('') %}selected{% endif %}>espèce</option>
+                <option value="chien" {% if app.request.get('espece') == 'chien' %}selected{% endif %}>chien</option>
+                <option value="chat" {% if app.request.get('espece') == 'chat' %}selected{% endif %}>chat</option>
+                <option value="lapin" {% if app.request.get('espece') == 'lapin' %}selected{% endif %}>lapin</option>
             </select>
-            <select name="race"><option value="">race</option></select>
-            <select name="urgence">
-                <option value="">urgent</option>
-                <option value="1">oui</option>
-                <option value="0">non</option>
+            <select name="race" id="race">
+                <option value="">Sélectionnez une race</option>
+                {% if app.request.get('race') %}
+                    <option value="{{ app.request.get('race') }}" selected>{{ app.request.get('race') }}</option>
+                {% endif %}
+            </select>
+            <select name="urgent">
+                <option value="" {% if app.request.get('urgent') is same as('') %}selected{% endif %}>urgent</option>
+                <option value="1" {% if app.request.get('urgent') == '1' %}selected{% endif %}>oui</option>
+                <option value="0" {% if app.request.get('urgent') == '0' %}selected{% endif %}>non</option>
             </select>
             <button type="submit">Rechercher</button>
-        </form>
     </aside>
 
     <section class="animal-grid">
@@ -36,7 +39,42 @@
             <p>Aucun animal trouvé. </p>
         {% endfor %}
     </section>
-</div>
-</form>
+        </div>
+    </form>
 </main>
+{% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+    <script>
+        document.addEventListener("DOMContentLoaded", function() {
+            const especeSelect = document.getElementById("espece");
+            const raceSelect = document.getElementById("race");
+
+            especeSelect.addEventListener("change", function() {
+                const espece = this.value;
+
+                // Réinitialiser la liste des races
+                raceSelect.innerHTML = '<option value="">Sélectionnez une race</option>';
+
+                if (espece !== "") {
+                    console.log("Appel API pour : " + espece);
+
+                    fetch(`/get-races?espece=${encodeURIComponent(espece)}`)
+                        .then(response => response.json())
+                        .then(data => {
+                            console.log("Réponse API :", data);
+
+                            data.forEach(race => {
+                                const option = document.createElement("option");
+                                option.value = race;
+                                option.textContent = race;
+                                raceSelect.appendChild(option);
+                            });
+                        })
+                        .catch(error => console.error("Erreur lors du chargement des races :", error));
+                }
+            });
+        });
+    </script>
 {% endblock %}

@@ -8,6 +8,7 @@ use Doctrine\ORM\EntityManagerInterface;
 use Psr\Log\LoggerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Bundle\SecurityBundle\Security;
+use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
@@ -25,8 +26,7 @@ final class AnimauxController extends AbstractController
             $filters = [
                 'espece'  => $request->query->get('espece'),
                 'race'    => $request->query->get('race'),
-                'age'     => $request->query->get('age'),
-                'urgence' => $request->query->get('urgence'),
+                'urgent' => $request->query->get('urgent'),
             ];
 
             $animaux = $animauxRepository->findByFilters($filters);
@@ -53,6 +53,28 @@ final class AnimauxController extends AbstractController
             ]);
         }
     }
+
+
+#[Route('/get-races', name: 'get_races', methods: ['GET'])]
+public function getRaces(Request $request): JsonResponse
+{
+    $espece = $request->query->get('espece');
+    $races = [];
+
+    switch ($espece) {
+        case 'chien':
+            $races = ['Labrador', 'Berger Allemand', 'Golden Retriever', 'Bulldog'];
+            break;
+        case 'chat':
+            $races = ['Persan', 'Siamois', 'Maine Coon', 'Sphynx'];
+            break;
+        case 'lapin':
+            $races = ['Bélier', 'Nain', 'Angora', 'Rex', 'papillon'];
+            break;
+    }
+
+    return new JsonResponse($races);
+}
 
     #[Route('/animaux/{id}', name: 'animaux_details', requirements: ['id' => '\d+'])]
     public function animal(

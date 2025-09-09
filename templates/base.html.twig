@@ -7,7 +7,8 @@
         <meta name="description" content="Adoptez un animal facilement grâce à Pattes Sans Foyer. Trouvez des chiens, chats et autres animaux disponibles.">
         <meta name="keywords" content="adoption, animaux, chiens, chats, refuge, Pattes Sans Foyer">
         {% block stylesheets %}
-        {% endblock %}
+        <link rel="stylesheet" href="{{ asset('css/app.css') }}">
+    {% endblock %}
 
         {% block javascripts %}
             {% block importmap %}{{ importmap('app') }}{% endblock %}
