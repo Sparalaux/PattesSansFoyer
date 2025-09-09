@@ -10,10 +10,18 @@
        <div class="container">
     <aside class="filters">
         <form method="get" action="{{ path('animaux') }}">
-            <select name="espece"><option value="">espèce</option></select>
+            <select name="espece">
+                <option value="">espèce</option>
+                <option value="chien">chien</option>
+                <option value="chat">chat</option>
+                <option value="lapin">espèce</option>
+            </select>
             <select name="race"><option value="">race</option></select>
-            <select name="age"><option value="">age</option></select>
-            <select name="urgence"><option value="">urgence</option></select>
+            <select name="urgence">
+                <option value="">urgent</option>
+                <option value="1">oui</option>
+                <option value="0">non</option>
+            </select>
             <button type="submit">Rechercher</button>
         </form>
     </aside>

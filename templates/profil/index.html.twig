@@ -19,10 +19,18 @@
         <h1>Information profil</h1>
 
         <div class="profil-info">
-            <p><strong>prenom utilisateur:</strong> {{ app.user.prenom }}</p>
-            <p><strong>nom utilisateur:</strong> {{ app.user.nom }}</p>
-            <p><strong>email utilisateur:</strong> {{ app.user.email }}</p>
-            <p><strong>telephone utilisateur:</strong> {{ app.user.telephone }}</p>
+            <div class="form-group">
+                <p><strong>prenom utilisateur:</strong> {{ app.user.prenom }}</p>
+            </div>
+            <div class="form-group">
+                <p><strong>nom utilisateur:</strong> {{ app.user.nom }}</p>
+            </div>
+            <div class="form-group">
+                <p><strong>email utilisateur:</strong> {{ app.user.email }}</p>
+            </div>
+            <div class="form-group">
+                <p><strong>telephone utilisateur:</strong> {{ app.user.telephone }}</p>
+            </div>
         </div>
 
         <div class="profil-btn">

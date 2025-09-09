@@ -350,6 +350,14 @@ main{
     font-size: 1rem;
 }
 
+.form-group p {
+    width: 100%;
+    padding: 0.75rem;
+    border: none;
+    background-color: #fce6bb;
+    font-size: 1rem;
+}
+
 .profil-btn {
     display: flex;
     justify-content: center;
