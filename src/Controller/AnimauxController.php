@@ -120,50 +120,66 @@ public function getRaces(Request $request): JsonResponse
     }
 
     #[Route('/animaux/{id}/reserver', name: 'animal_reserver')]
-    #[IsGranted('ROLE_USER')]
-    public function reserver(
-        int $id,
-        Request $request,
-        AnimauxRepository $animauxRepository,
-        EntityManagerInterface $em,
-        Security $security,
-        LoggerInterface $logger
-    ): Response {
-        try {
-            $animal = $animauxRepository->find($id);
+public function reserver(
+    int $id,
+    Request $request,
+    AnimauxRepository $animauxRepository,
+    EntityManagerInterface $em,
+    Security $security,
+    LoggerInterface $logger
+): Response {
+    try {
+        $user = $security->getUser();
 
-            if (!$animal) {
-                throw $this->createNotFoundException('Animal non trouvé.');
-            }
-
-            $reservation = new Reservation();
-            $reservation->setAnimal($animal);
-            $reservation->setUser($security->getUser());
-            $reservation->setDateReservation(new \DateTime());
-
-            $em->persist($reservation);
-            $em->flush();
-
-            $this->addFlash('success', 'Réservation enregistrée avec succès !');
-
-            return $this->redirectToRoute('animaux_details', ['id' => $id]);
-
-        } catch (\Doctrine\DBAL\Exception $e) {
-            $logger->error('Erreur BDD dans AnimauxController::reserver() : ' . $e->getMessage());
-
-            $this->addFlash('error', 'Impossible de réserver cet animal pour le moment.');
-
-            return $this->render('errors/database_error.html.twig', [
-                'message' => 'Erreur lors de l’enregistrement de la réservation.',
-            ]);
-        } catch (\Exception $e) {
-            $logger->critical('Erreur inattendue dans AnimauxController::reserver() : ' . $e->getMessage());
-
-            $this->addFlash('error', 'Une erreur est survenue.');
-
-            return $this->render('errors/general_error.html.twig', [
-                'message' => 'Impossible de réserver cet animal.',
-            ]);
+        if (!$user) {
+            $this->addFlash('error', 'Vous devez être connecté pour réserver.');
+            return $this->redirectToRoute('app_login');
         }
+
+        // Si c'est une agence → rediriger vers accueil
+        if ($security->isGranted('ROLE_AGENCE')) {
+            $this->addFlash('error', 'Les agences ne peuvent pas réserver d’animaux.');
+            return $this->redirectToRoute('app_home');
+        }
+
+        $animal = $animauxRepository->find($id);
+
+        if (!$animal) {
+            throw $this->createNotFoundException('Animal non trouvé.');
+        }
+
+        $reservation = new Reservation();
+        $reservation->setAnimal($animal);
+        $reservation->setUser($user);
+        $reservation->setDateReservation(new \DateTime());
+
+        $em->persist($reservation);
+        $em->flush();
+
+        $this->addFlash('success', 'Réservation enregistrée avec succès !');
+
+        // 👉 Redirection vers le profil si ROLE_USER
+        if ($security->isGranted('ROLE_USER')) {
+            return $this->redirectToRoute('profil');
+        }
+
+        // fallback par sécurité
+        return $this->redirectToRoute('app_home');
+
+    } catch (\Doctrine\DBAL\Exception $e) {
+        $logger->error('Erreur BDD dans AnimauxController::reserver() : ' . $e->getMessage());
+
+        $this->addFlash('error', 'Impossible de réserver cet animal pour le moment.');
+        return $this->render('errors/database_error.html.twig', [
+            'message' => 'Erreur lors de l’enregistrement de la réservation.',
+        ]);
+    } catch (\Exception $e) {
+        $logger->critical('Erreur inattendue dans AnimauxController::reserver() : ' . $e->getMessage());
+
+        $this->addFlash('error', 'Une erreur est survenue.');
+        return $this->render('errors/general_error.html.twig', [
+            'message' => 'Impossible de réserver cet animal.',
+        ]);
     }
+}
 }
