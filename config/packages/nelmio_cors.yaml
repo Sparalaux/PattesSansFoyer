@@ -7,7 +7,7 @@ nelmio_cors:
         max_age: 3600
     paths:
         '^/api/':
-            allow_origin: ['https://tondomaine.fr']   # uniquement ton front
+            allow_origin: ['https://mondomaine.fr']
             allow_credentials: true
             allow_headers: ['Content-Type', 'Authorization']
             allow_methods: ['GET', 'POST', 'OPTIONS']

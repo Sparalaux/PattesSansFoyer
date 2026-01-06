@@ -3,6 +3,10 @@
     padding: 0;
 }
 
+h1{
+    margin-left: 47%;
+}
+
 .navbar{
     height: 80px;
     width: 100%;
